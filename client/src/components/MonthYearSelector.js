@@ -6,17 +6,23 @@ const yearMonthPeriod = getPeriodArray(
   new Date(2021, 12, 31)
 );
 
-export default function MonthYearSelector() {
+export default function MonthYearSelector({ onFilterChange }) {
   const [yearMonthId, setYearMonthId] = useState(yearMonthPeriod[0].id);
   const [yearMonthDesc, setYearMonthDesc] = useState(
     yearMonthPeriod[0].description
   );
+  const [yearMonthFilter, setYearMonthFilter] = useState(
+    yearMonthPeriod[0].yearMonth
+  );
 
   useEffect(() => {
-    const yearMOnthObject = yearMonthPeriod.find(
+    const yearMonthObject = yearMonthPeriod.find(
       (yearMonth) => yearMonth.id === yearMonthId
     );
-    setYearMonthDesc(yearMOnthObject.description);
+    setYearMonthDesc(yearMonthObject.description);
+    setYearMonthFilter(yearMonthObject.yearMonth);
+
+    onFilterChange(yearMonthFilter);
   }, [yearMonthId]);
 
   const handleYearMonthChange = (event) => {

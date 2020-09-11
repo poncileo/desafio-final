@@ -11,7 +11,8 @@ const getPeriodArray = function (startDate, endDate) {
     currentDate = startDate;
 
   while (currentDate.getFullYear() <= endDate.getFullYear()) {
-    currentMonth = currentDate.getMonth() + 1;
+    currentMonth = currentDate.toLocaleString('pt-BR', { month: '2-digit' });
+    currentMonth = currentMonth.toLocaleString('pt-BR', { month: '2-digit' });
     currentYear = currentDate.getFullYear();
     shortMonth = currentDate.toLocaleString('pt-BR', { month: 'short' });
 
