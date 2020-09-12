@@ -1,6 +1,11 @@
 import React from 'react';
+import Action from './Action';
 
-export default function TransactionsControl({ transactions }) {
+export default function TransactionsControl({
+  transactions,
+  onDelete,
+  onUpdate,
+}) {
   transactions.sort((a, b) => a.day - b.day);
   const tableTransactions = [];
 
@@ -20,10 +25,22 @@ export default function TransactionsControl({ transactions }) {
     }
     currentTransactions.push(transaction);
   });
+
   tableTransactions.push({
     id: id++,
     transactions: currentTransactions,
   });
+
+  const handleActionClick = (id, type) => {
+    const transaction = transactions.find(
+      (transaction) => transaction.id === id
+    );
+    if (type === 'delete') {
+      onDelete(transaction);
+      return;
+    }
+    onUpdate(transaction);
+  };
 
   return (
     <>
@@ -40,13 +57,26 @@ export default function TransactionsControl({ transactions }) {
                       style={{ ...transactionStyle, ...styles.transactionRow }}
                       key={id}
                     >
-                      <td>{day}</td>
-                      <td>
+                      <td style={{ width: '10%' }}>{day}</td>
+                      <td style={{ width: '50%' }}>
                         <div>{category}</div>
                         <div>{description}</div>
                       </td>
-                      <td>{value}</td>
-                      <td>{type}</td>
+                      <td style={{ width: '15%' }}>{value}</td>
+                      <td style={{ width: '25%' }}>
+                        <div>
+                          <Action
+                            id={id}
+                            type={'edit'}
+                            onActionClick={handleActionClick}
+                          />
+                          <Action
+                            id={id}
+                            type={'delete'}
+                            onActionClick={handleActionClick}
+                          />
+                        </div>
+                      </td>
                     </tr>
                   );
                 }
@@ -55,7 +85,6 @@ export default function TransactionsControl({ transactions }) {
           </table>
         );
       })}
-      );
     </>
   );
 }

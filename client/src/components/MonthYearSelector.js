@@ -1,33 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { getPeriodArray } from '../utils/getPeriodArray.js';
+import { getPeriodArray } from '../utils/dateUtils.js';
 
 const yearMonthPeriod = getPeriodArray(
   new Date(2019, 1, 1),
   new Date(2021, 12, 31)
 );
+const currentDate = new Date();
+const currentYear = currentDate.getFullYear();
+const currentMonth = currentDate.toLocaleString('pt-BR', { month: '2-digit' });
+const currentYearMonth = `${currentYear}-${currentMonth}`;
+
+const currentYearMonthObject = yearMonthPeriod.find(
+  (period) => period.yearMonth === currentYearMonth
+);
 
 export default function MonthYearSelector({ onFilterChange }) {
-  const [yearMonthId, setYearMonthId] = useState(yearMonthPeriod[0].id);
-  const [yearMonthDesc, setYearMonthDesc] = useState(
-    yearMonthPeriod[0].description
-  );
+  const [yearMonthId, setYearMonthId] = useState(currentYearMonthObject.id);
   const [yearMonthFilter, setYearMonthFilter] = useState(
-    yearMonthPeriod[0].yearMonth
+    currentYearMonthObject.yearMonth
   );
+  useEffect(() => {
+    onFilterChange(yearMonthFilter);
+  }, [yearMonthFilter, onFilterChange]);
 
   useEffect(() => {
     const yearMonthObject = yearMonthPeriod.find(
       (yearMonth) => yearMonth.id === yearMonthId
     );
-    setYearMonthDesc(yearMonthObject.description);
     setYearMonthFilter(yearMonthObject.yearMonth);
-
-    onFilterChange(yearMonthFilter);
   }, [yearMonthId]);
 
   const handleYearMonthChange = (event) => {
-    const newYearMonth = parseInt(event.target.value, 10);
-    setYearMonthId(newYearMonth);
+    const newYearMonthId = parseInt(event.target.value, 10);
+    setYearMonthId(newYearMonthId);
   };
 
   const handlePreviousItem = () => {
@@ -43,7 +48,7 @@ export default function MonthYearSelector({ onFilterChange }) {
   return (
     <div style={styles.flexRow}>
       <button
-        className="waves-effect waves-lights btn green dark-4"
+        className=" waves-lights btn"
         onClick={handlePreviousItem}
         disabled={yearMonthId < 2}
       >
@@ -64,7 +69,7 @@ export default function MonthYearSelector({ onFilterChange }) {
         })}
       </select>
       <button
-        className="waves-effect waves-lights btn green dark-4"
+        className="waves-lights btn"
         onClick={handleNextItem}
         disabled={yearMonthId === yearMonthPeriod.length}
       >

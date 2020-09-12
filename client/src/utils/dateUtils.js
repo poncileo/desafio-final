@@ -29,8 +29,17 @@ const getPeriodArray = function (startDate, endDate) {
   }
   return dates;
 };
-
 // Example:
 // const dates = getPeriodArray(new Date(2019, 1, 1), new Date(2021, 12, 31));
 
-export { getPeriodArray };
+const splitYearMonthDayFrom = (yearMonthDay) => {
+  // YYYY-MM-DD in String format
+  const year = yearMonthDay.substring(0, 4).trim();
+  const month = yearMonthDay.substring(5, 7).trim();
+  const day = yearMonthDay.substring(8, 10).trim();
+  const yearMonth = `${year}-${month}`;
+
+  return { year, month, day, yearMonth, yearMonthDay };
+};
+
+export { getPeriodArray, splitYearMonthDayFrom };
